@@ -1,3 +1,4 @@
+import cv2
 import pickle
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -27,6 +28,13 @@ class Classifier:
         testScore = self.svc.score(testX, testY)
         print("Training score: {:.3f}".format(trainScore))
         print("Test score: {:.3f}".format(testScore))
+
+    def predict(self, image):
+        image = cv2.resize(image, (64, 64))
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        features = training_data.obtain_features(image)
+        features = self.scaler.transform([features])
+        return self.svc.predict(features)
 
 def save(classifier):
     print("Saving classifier ...")
