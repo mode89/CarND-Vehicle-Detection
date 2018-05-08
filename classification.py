@@ -3,6 +3,7 @@ import pickle
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import LinearSVC
+from sklearn.neural_network import MLPClassifier
 import training_data
 
 CLASSIFIER_FILE_NAME = "classifier.pkl"
@@ -21,7 +22,7 @@ class Classifier:
         testX = self.scaler.transform(testX)
 
         print("Training classifier ...")
-        self.svc = LinearSVC()
+        self.svc = MLPClassifier()
         self.svc.fit(trainX, trainY)
 
         trainScore = self.svc.score(trainX, trainY)
