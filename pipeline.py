@@ -35,15 +35,17 @@ class Pipeline:
                         range(left, right))
                     yield windowMask
 
-    def process(self, image):
+    def build_heat_map(self, image):
         heatMap = np.zeros((720, 1280), dtype=np.uint8)
-
         for windowMask in Pipeline.sliding_windows():
             windowImage = image[windowMask]
             prediction = self.classifier.predict(windowImage)
             if prediction:
                 heatMap[windowMask] += 1
+        return heatMap
 
+    def process(self, image):
+        heatMap = self.build_heat_map(image)
         heatMap[heatMap <= 10] = 0
         labelMap, labels = label(heatMap)
 
@@ -63,11 +65,12 @@ class Pipeline:
 def count_frames(fileName):
     print("Counting frames ...")
     counter = 0
-    cap = cv2.VideoCapture(fileName)
+    video = cv2.VideoCapture(fileName)
     while True:
-        ret, frame = cap.read()
+        ret, frame = video.read()
         if not ret: break
         counter += 1
+    video.release()
     return counter
 
 if __name__ == "__main__":
