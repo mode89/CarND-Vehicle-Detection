@@ -31,14 +31,17 @@ def load_training_data_from_directory(directory, label):
     labels = list()
     for path in imagePaths:
         image = cv2.imread(path)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         imageFeatures = obtain_features(image)
         features.append(imageFeatures)
         labels.append(label)
     return features, labels
 
 def obtain_features(image):
-    return hog(image, orientations=9, pixels_per_cell=(8, 8))
+    return np.concatenate((
+        hog(image[:,:,0], orientations=9, pixels_per_cell=(8, 8)),
+        hog(image[:,:,1], orientations=9, pixels_per_cell=(8, 8)),
+        hog(image[:,:,2], orientations=9, pixels_per_cell=(8, 8)),
+    ))
 
 def concatenate_training_data(trainingDataList):
     features = list()

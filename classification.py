@@ -32,7 +32,6 @@ class Classifier:
 
     def predict(self, image):
         image = cv2.resize(image, (64, 64))
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         features = training_data.obtain_features(image)
         features = self.scaler.transform([features])
         return self.svc.predict(features)
