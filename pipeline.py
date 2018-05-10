@@ -52,6 +52,16 @@ class Pipeline:
 
         return image
 
+def count_frames(fileName):
+    print("Counting frames ...")
+    counter = 0
+    cap = cv2.VideoCapture(fileName)
+    while True:
+        ret, frame = cap.read()
+        if not ret: break
+        counter += 1
+    return counter
+
 if __name__ == "__main__":
 
     pipeline = Pipeline()
