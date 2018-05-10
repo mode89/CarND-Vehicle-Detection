@@ -15,28 +15,36 @@ class Pipeline:
     def __init__(self):
         self.classifier = classification.load()
 
-    def process(self, image):
-        heatMap = np.zeros((720, 1280), dtype=np.uint8)
-
+    def sliding_windows():
         windowSizes = range(
             MIN_WINDOW_SIZE,
             MAX_WINDOW_SIZE + WINDOW_SCALE_STEP,
             WINDOW_SCALE_STEP)
         for windowSize in windowSizes:
-            for x in range(0, 1280 - windowSize, windowSize // 2):
-                top = HORIZON_LINE - \
-                    int(WINDOW_HORIZON_RELATIVE_SHIFT * windowSize)
-                bottom = HORIZON_LINE + \
-                    int((1 - WINDOW_HORIZON_RELATIVE_SHIFT) * windowSize)
-                left = x
-                right = x + windowSize
-                index = np.ix_(range(top, bottom), range(left, right))
-                im = image[index]
-                prediction = self.classifier.predict(im)
-                if prediction:
-                    heatMap[index] += 1
+            columnShift = windowSize // 4
+            columnNum = (1280 - windowSize) // columnShift
+            rowShift = windowSize // 5
+            for column in range(columnNum):
+                for row in range(-2, 3):
+                    top = HORIZON_LINE - windowSize // 3 - row * rowShift
+                    bottom = top + windowSize
+                    left = column * columnShift
+                    right = left + windowSize
+                    windowMask = np.ix_(
+                        range(top, bottom),
+                        range(left, right))
+                    yield windowMask
 
-        heatMap[heatMap <= 1] = 0
+    def process(self, image):
+        heatMap = np.zeros((720, 1280), dtype=np.uint8)
+
+        for windowMask in Pipeline.sliding_windows():
+            windowImage = image[windowMask]
+            prediction = self.classifier.predict(windowImage)
+            if prediction:
+                heatMap[windowMask] += 1
+
+        heatMap[heatMap <= 10] = 0
         labelMap, labels = label(heatMap)
 
         for labeledArea in find_objects(labelMap):
