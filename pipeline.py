@@ -3,6 +3,7 @@ import numpy as np
 import classification
 from classification import Classifier
 from scipy.ndimage.measurements import label, find_objects
+from tqdm import tqdm
 
 MIN_WINDOW_SIZE = 50
 MAX_WINDOW_SIZE = 250
@@ -77,8 +78,17 @@ if __name__ == "__main__":
 
     pipeline = Pipeline()
 
-    image = cv2.imread("test_images/test1.jpg")
-    image = pipeline.process(image)
+    fileName = "test_video.mp4"
+    frameNumber = count_frames(fileName)
 
-    cv2.imshow("image", image)
-    cv2.waitKey(0)
+    inputVideo = cv2.VideoCapture(fileName)
+    fourcc = cv2.VideoWriter_fourcc(*"XVID")
+    outputVideo = cv2.VideoWriter("output.avi", fourcc, 25, (1280, 720))
+
+    for frameId in tqdm(range(frameNumber)):
+        ret, image = inputVideo.read()
+        image = pipeline.process(image)
+        outputVideo.write(image)
+
+    inputVideo.release()
+    outputVideo.release()
