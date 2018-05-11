@@ -4,24 +4,50 @@ import classification
 from classification import Classifier
 from scipy.ndimage.measurements import label, find_objects
 from tqdm import tqdm
+import training_data
 
 MIN_WINDOW_SIZE = 50
 MAX_WINDOW_SIZE = 250
 WINDOW_SCALE_STEP = 50
 HORIZON_LINE = 440
-WINDOW_HORIZON_RELATIVE_SHIFT = 0.33
+WINDOW_HORIZON_SECTION = 1 / 3
+WINDOWS_ROWS_NUMBER = 5
+WINDOWS_ROWS = range(
+    WINDOWS_ROWS_NUMBER // 2,
+    WINDOWS_ROWS_NUMBER // 2 + 1)
+WINDOW_HORIZONTAL_SHIFT = 1 / 4
+WINDOW_VERTICAL_SHIFT = 1 / 4
 
 class Pipeline:
 
     def __init__(self):
         self.classifier = classification.load()
 
-    def sliding_windows():
+    def extract_windows_features(image, windowSize):
+        imageWidth = image.shape[1]
+        horizonShift = int(windowSize * WINDOW_HORIZON_SECTION)
+        verticalShift = int(windowSize * WINDOW_VERTICAL_SHIFT)
+        horizontalShift = int(windowSize * WINDOW_HORIZONTAL_SHIFT)
+        halfRowsNum = WINDOWS_ROWS_NUMBER // 2
+        columnsNum = (imageWidth - windowSize) // horizontalShift + 1
+        top = HORIZON_LINE - horizonShift - verticalShift * halfRowsNum
+        bottom = top + windowSize + verticalShift * halfRowsNum * 2
+        right = windowSize + (columnsNum - 1) * horizontalShift
+        roiImage = image[top:bottom,:right,:]
+        roiScaledSize = (
+            int((1 + (columnsNum - 1) * WINDOW_HORIZONTAL_SHIFT) * 64),
+            int((1 + 2 * halfRowsNum * WINDOW_VERTICAL_SHIFT) * 64)
+        )
+        roiImage = cv2.resize(roiImage, dsize=roiScaledSize)
+        roiFeatures = training_data.obtain_features(roiImage)
+
+    def sliding_windows(image):
         windowSizes = range(
             MIN_WINDOW_SIZE,
             MAX_WINDOW_SIZE + WINDOW_SCALE_STEP,
             WINDOW_SCALE_STEP)
         for windowSize in windowSizes:
+            roiImage = Pipeline.extract_windows_features(image, windowSize)
             columnShift = windowSize // 4
             columnNum = (1280 - windowSize) // columnShift
             rowShift = windowSize // 5
