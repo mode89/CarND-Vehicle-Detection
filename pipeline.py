@@ -6,6 +6,9 @@ from scipy.ndimage.measurements import label, find_objects
 from tqdm import tqdm
 import training_data
 
+# MIN_WINDOW_SIZE = 40
+# MAX_WINDOW_SIZE = 280
+# WINDOW_SCALE_STEP = 40
 MIN_WINDOW_SIZE = 50
 MAX_WINDOW_SIZE = 250
 WINDOW_SCALE_STEP = 50
@@ -34,12 +37,19 @@ class Pipeline:
         bottom = top + windowSize + verticalShift * halfRowsNum * 2
         right = windowSize + (columnsNum - 1) * horizontalShift
         roiImage = image[top:bottom,:right,:]
-        roiScaledSize = (
-            int((1 + (columnsNum - 1) * WINDOW_HORIZONTAL_SHIFT) * 64),
-            int((1 + 2 * halfRowsNum * WINDOW_VERTICAL_SHIFT) * 64)
-        )
-        roiImage = cv2.resize(roiImage, dsize=roiScaledSize)
+        roiScaledWidth = int((1 + (columnsNum - 1) * WINDOW_HORIZONTAL_SHIFT) * 64)
+        roiScaledHeight = int((1 + 2 * halfRowsNum * WINDOW_VERTICAL_SHIFT) * 64)
+        widthScale = roiScaledWidth / roiImage.shape[1]
+        heightScale = roiScaledHeight / roiImage.shape[0]
+        roiImage = cv2.resize(roiImage,
+            dsize=(0, 0), fx=widthScale, fy=heightScale)
         roiFeatures = training_data.obtain_features(roiImage)
+        matrix = np.float32([
+            [8.0 / widthScale, 0.0],
+            [0.0, 8.0 / heightScale],
+            [0.0, top]
+        ])
+        return roiFeatures, matrix
 
     def sliding_windows(image):
         windowSizes = range(
@@ -47,12 +57,15 @@ class Pipeline:
             MAX_WINDOW_SIZE + WINDOW_SCALE_STEP,
             WINDOW_SCALE_STEP)
         for windowSize in windowSizes:
-            roiImage = Pipeline.extract_windows_features(image, windowSize)
-            columnShift = windowSize // 4
+            roiFeatures, matrix = \
+                Pipeline.extract_windows_features(image, windowSize)
+            featuresWidth = roiFeatures.shape[1]
+            featuresHeight = roiFeatures.shape[0]
+            columnShift = int(8 * WINDOW_HORIZONTAL_SHIFT)
             columnNum = (1280 - windowSize) // columnShift
             rowShift = windowSize // 5
             for column in range(columnNum):
-                for row in range(-2, 3):
+                for row in WINDOWS_ROWS:
                     top = HORIZON_LINE - windowSize // 3 - row * rowShift
                     bottom = top + windowSize
                     left = column * columnShift
@@ -64,16 +77,21 @@ class Pipeline:
 
     def build_heat_map(self, image):
         heatMap = np.zeros((720, 1280), dtype=np.uint8)
-        for windowMask in Pipeline.sliding_windows():
+        for windowMask in Pipeline.sliding_windows(image):
             windowImage = image[windowMask]
-            prediction = self.classifier.predict(windowImage)
-            if prediction:
-                heatMap[windowMask] += 1
+            # prediction = self.classifier.predict(windowImage)
+            # if prediction:
+            #     heatMap[windowMask] += 1
         return heatMap
 
     def process(self, image):
         heatMap = self.build_heat_map(image)
-        heatMap[heatMap <= 10] = 0
+
+        # heatMap[heatMap <= 13] = 0
+        heatMap = np.uint8(heatMap * 255.0 / np.max(heatMap))
+        heatMap = np.dstack([heatMap] * 3)
+        return heatMap
+
         labelMap, labels = label(heatMap)
 
         for labeledArea in find_objects(labelMap):
@@ -104,6 +122,7 @@ if __name__ == "__main__":
 
     pipeline = Pipeline()
 
+    # fileName = "project_video.mp4"
     fileName = "test_video.mp4"
     frameNumber = count_frames(fileName)
 
@@ -115,6 +134,8 @@ if __name__ == "__main__":
         ret, image = inputVideo.read()
         image = pipeline.process(image)
         outputVideo.write(image)
+        cv2.imshow("image", image)
+        cv2.waitKey(1)
 
     inputVideo.release()
     outputVideo.release()

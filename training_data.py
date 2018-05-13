@@ -4,6 +4,7 @@ import numpy as np
 import os
 import pickle
 from skimage.feature import hog
+from tqdm import tqdm
 
 TRAINING_DATA_FILE = "training_data.pkl"
 
@@ -29,19 +30,26 @@ def load_training_data_from_directory(directory, label):
     imagePaths = glob.glob(os.path.join(directory, "**/*.png"))
     features = list()
     labels = list()
-    for path in imagePaths:
+    for path in tqdm(imagePaths, ascii=True):
         image = cv2.imread(path)
-        imageFeatures = obtain_features(image)
+        imageFeatures = obtain_features(image).ravel()
         features.append(imageFeatures)
         labels.append(label)
     return features, labels
 
 def obtain_features(image):
-    return np.concatenate((
-        hog(image[:,:,0], orientations=9, pixels_per_cell=(8, 8)),
-        hog(image[:,:,1], orientations=9, pixels_per_cell=(8, 8)),
-        hog(image[:,:,2], orientations=9, pixels_per_cell=(8, 8)),
-    ))
+    features = list()
+    for channel in range(image.shape[2]):
+        channelFeatures = hog(
+            image=image[:,:,channel],
+            orientations=9,
+            pixels_per_cell=(8, 8),
+            cells_per_block=(1, 1),
+            feature_vector=False)
+        channelFeatures = np.squeeze(channelFeatures)
+        features.append(channelFeatures)
+    features = np.concatenate(features, axis=2)
+    return features
 
 def concatenate_training_data(trainingDataList):
     features = list()

@@ -22,7 +22,7 @@ class Classifier:
         testX = self.scaler.transform(testX)
 
         print("Training classifier ...")
-        self.svc = MLPClassifier()
+        self.svc = MLPClassifier((200, 50), random_state=42, verbose=True)
         self.svc.fit(trainX, trainY)
 
         trainScore = self.svc.score(trainX, trainY)
