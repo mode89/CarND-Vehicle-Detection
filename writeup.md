@@ -35,24 +35,29 @@ You're reading it!
 
 ### Histogram of Oriented Gradients (HOG)
 
-#### 1. Explain how (and identify where in your code) you extracted HOG features from the training images.
+#### 1. Explain how (and identify where in your code) you extracted HOG features from the training images. Explain how you settled on your final choice of HOG parameters.
 
-The code for this step is contained in the first code cell of the IPython notebook (or in lines # through # of the file called `some_file.py`).  
+The code for this step is contained in the [training_data.py] file. The
+[load_training_data()] method loads the vechile and non-vehicle images,
+[calculate HOG features] for each image and [associate each image with a label].
+I used the `skimage.hog()` method to obtain HOG features for each channel of
+a training image. I used the default value of 9 for the number of
+orientations and the default value of `(8, 8)` for the size of a cell. After
+I settled with the classifier, I tried values of `(1, 1)` and `(3, 3)` for
+the number of cells per a block and selected the value of `(1, 1)`, because
+it provided around 20% boost in FPS and I didn't notice a big difference
+in the quality of detection compare to the value of `(3, 3)`. I merge HOG
+features calculated for each of the RGB channels of a training image.
 
-I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
+If you run the [training_data.py] script, it will extract features and
+generate labels as numpy arrays and [save][save_training_data] them into
+the `traingin_data.pkl` file. This will speed up loading of the training
+data during iterative training of the classifier.
 
-![alt text][image1]
-
-I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
-
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
-
-
-![alt text][image2]
-
-#### 2. Explain how you settled on your final choice of HOG parameters.
-
-I tried various combinations of parameters and...
+[training_data.py]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/training_data.py
+[calculate HOG features]: https://github.com/mode89/CarND-Vehicle-Detection/blob/db9e99d0a7f58c9346a57f201ec4cecb29b704aa/training_data.py#L40
+[associate each image with a label]: https://github.com/mode89/CarND-Vehicle-Detection/blob/db9e99d0a7f58c9346a57f201ec4cecb29b704aa/training_data.py#L37
+[save_training_data]: https://github.com/mode89/CarND-Vehicle-Detection/blob/db9e99d0a7f58c9346a57f201ec4cecb29b704aa/training_data.py#L58
 
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
