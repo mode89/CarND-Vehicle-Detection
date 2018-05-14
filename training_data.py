@@ -37,11 +37,14 @@ def load_training_data_from_directory(directory, label):
     return features, labels
 
 def obtain_features(image):
-    return np.concatenate((
-        hog(image[:,:,0], orientations=9, pixels_per_cell=(8, 8)),
-        hog(image[:,:,1], orientations=9, pixels_per_cell=(8, 8)),
-        hog(image[:,:,2], orientations=9, pixels_per_cell=(8, 8)),
-    ))
+    features = list()
+    for channel in range(image.shape[2]):
+        channelFeatures = hog(image[:,:,channel],
+            orientations=9,
+            pixels_per_cell=(8, 8),
+            cells_per_block=(1, 1))
+        features.append(channelFeatures)
+    return np.concatenate(features)
 
 def concatenate_training_data(trainingDataList):
     features = list()
