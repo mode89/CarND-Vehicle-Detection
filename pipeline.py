@@ -51,17 +51,22 @@ class Pipeline:
         labelMap, labels = label(heatMap)
 
         for labeledArea in find_objects(labelMap):
-            top = labeledArea[0].start
-            bottom = labeledArea[0].stop
-            left = labeledArea[1].start
-            right = labeledArea[1].stop
+            boundingBox = ObjectBoundingBox(labeledArea)
             cv2.rectangle(image,
-                pt1=(left, top),
-                pt2=(right, bottom),
+                pt1=(boundingBox.left, boundingBox.top),
+                pt2=(boundingBox.right, boundingBox.bottom),
                 color=(255, 0, 0),
                 thickness=3)
 
         return image
+
+class ObjectBoundingBox:
+
+    def __init__(self, obj):
+        self.top = obj[0].start
+        self.bottom = obj[0].stop
+        self.left = obj[1].start
+        self.right = obj[1].stop
 
 def count_frames(fileName):
     print("Counting frames ...")
