@@ -50,7 +50,7 @@ class Pipeline:
         heatMap[heatMap <= 10] = 0
         labelMap, labels = label(heatMap)
 
-        for labeledArea in find_objects(labelMap):
+        for labeledArea in Pipeline.find_objects(labelMap):
             boundingBox = ObjectBoundingBox(labeledArea)
             cv2.rectangle(image,
                 pt1=(boundingBox.left, boundingBox.top),
@@ -59,6 +59,19 @@ class Pipeline:
                 thickness=3)
 
         return image
+
+    def find_objects(labelMap):
+        objects = find_objects(labelMap)
+        objects = Pipeline.filter_tall_objects(objects)
+        return objects
+
+    def filter_tall_objects(objects):
+        for obj in objects:
+            boundingBox = ObjectBoundingBox(obj)
+            width = boundingBox.right - boundingBox.left
+            height = boundingBox.bottom - boundingBox.top
+            if width / height > 1.0:
+                yield obj
 
 class ObjectBoundingBox:
 
