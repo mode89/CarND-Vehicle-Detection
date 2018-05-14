@@ -4,6 +4,7 @@ import numpy as np
 import os
 import pickle
 from skimage.feature import hog
+from tqdm import tqdm
 
 TRAINING_DATA_FILE = "training_data.pkl"
 
@@ -29,7 +30,7 @@ def load_training_data_from_directory(directory, label):
     imagePaths = glob.glob(os.path.join(directory, "**/*.png"))
     features = list()
     labels = list()
-    for path in imagePaths:
+    for path in tqdm(imagePaths):
         image = cv2.imread(path)
         imageFeatures = obtain_features(image)
         features.append(imageFeatures)
