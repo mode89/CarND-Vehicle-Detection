@@ -58,6 +58,8 @@ generate labels represented by numpy arrays and [save][save_training_data]
 them into the `traingin_data.pkl` file. This will speed up loading of
 the training data during iterative training of the classifier.
 
+[training_data.py]: ./training_data.py
+[load_training_data()]: https://github.com/mode89/CarND-Vehicle-Detection/blob/f2cecc3119066e074928f17c22c0d23bc73012ec/training_data.py#L11
 [calculate_hog_features]: https://github.com/mode89/CarND-Vehicle-Detection/blob/f2cecc3119066e074928f17c22c0d23bc73012ec/training_data.py#L45
 [calculate_color_features]: https://github.com/mode89/CarND-Vehicle-Detection/blob/f2cecc3119066e074928f17c22c0d23bc73012ec/training_data.py#L55
 [associate each image with a label]: https://github.com/mode89/CarND-Vehicle-Detection/blob/f2cecc3119066e074928f17c22c0d23bc73012ec/training_data.py#L37
@@ -76,6 +78,7 @@ Loading the trained model from a file speeds up detection pipeline.
 If you run the [classification.py] script, it will train the classifier and
 save the trained model into the `classifier.pkl` file.
 
+[classification.py]: ./classification.py
 [split training and test data]: https://github.com/mode89/CarND-Vehicle-Detection/blob/7b40beedbff7792c29c98b4d0f7d83018ea47038/classification.py#L14
 [normalize training features]: https://github.com/mode89/CarND-Vehicle-Detection/blob/7b40beedbff7792c29c98b4d0f7d83018ea47038/classification.py#L19
 [train the classifier]: https://github.com/mode89/CarND-Vehicle-Detection/blob/7b40beedbff7792c29c98b4d0f7d83018ea47038/classification.py#L24
