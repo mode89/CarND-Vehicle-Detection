@@ -2,7 +2,6 @@ import cv2
 import pickle
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.svm import LinearSVC
 from sklearn.neural_network import MLPClassifier
 import training_data
 
@@ -22,11 +21,11 @@ class Classifier:
         testX = self.scaler.transform(testX)
 
         print("Training classifier ...")
-        self.svc = MLPClassifier()
-        self.svc.fit(trainX, trainY)
+        self.classifier = MLPClassifier()
+        self.classifier.fit(trainX, trainY)
 
-        trainScore = self.svc.score(trainX, trainY)
-        testScore = self.svc.score(testX, testY)
+        trainScore = self.classifier.score(trainX, trainY)
+        testScore = self.classifier.score(testX, testY)
         print("Training score: {:.3f}".format(trainScore))
         print("Test score: {:.3f}".format(testScore))
 
@@ -34,7 +33,7 @@ class Classifier:
         image = cv2.resize(image, (64, 64))
         features = training_data.obtain_features(image)
         features = self.scaler.transform([features])
-        return self.svc.predict(features)
+        return self.classifier.predict(features)
 
 def save(classifier):
     print("Saving classifier ...")
