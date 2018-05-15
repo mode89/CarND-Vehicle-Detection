@@ -64,9 +64,22 @@ the training data during iterative training of the classifier.
 [save_training_data]: https://github.com/mode89/CarND-Vehicle-Detection/blob/f2cecc3119066e074928f17c22c0d23bc73012ec/training_data.py#L66
 [combine_features]: https://github.com/mode89/CarND-Vehicle-Detection/blob/f2cecc3119066e074928f17c22c0d23bc73012ec/training_data.py#L43
 
-#### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
+#### 2. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
-I trained a linear SVM using...
+The code for this step is contained in the [classification.py] file. I
+trained the multi-layer perceptron using the `sklearn.neural_network.MLPClassifier`
+class. First, I [split training and test data] using the `sklearn.model_selection.train_test_split`
+method. Then I [normalize training features] using the `sklearn.preprocessing.StandardScaler`
+class. Then [train the classifier] and [save the trained model] into a file.
+Loading the trained model from a file speeds up detection pipeline.
+
+If you run the [classification.py] script, it will train the classifier and
+save the trained model into the `classifier.pkl` file.
+
+[split training and test data]: https://github.com/mode89/CarND-Vehicle-Detection/blob/7b40beedbff7792c29c98b4d0f7d83018ea47038/classification.py#L14
+[normalize training features]: https://github.com/mode89/CarND-Vehicle-Detection/blob/7b40beedbff7792c29c98b4d0f7d83018ea47038/classification.py#L19
+[train the classifier]: https://github.com/mode89/CarND-Vehicle-Detection/blob/7b40beedbff7792c29c98b4d0f7d83018ea47038/classification.py#L24
+[save the trained model]: https://github.com/mode89/CarND-Vehicle-Detection/blob/7b40beedbff7792c29c98b4d0f7d83018ea47038/classification.py#L38
 
 ### Sliding Window Search
 
