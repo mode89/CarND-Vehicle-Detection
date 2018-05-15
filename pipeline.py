@@ -96,12 +96,13 @@ if __name__ == "__main__":
 
     pipeline = Pipeline()
 
-    fileName = "test_video.mp4"
-    frameNumber = count_frames(fileName)
+    inputFileName = "project_video.mp4"
+    outputFileName = "output.avi"
+    frameNumber = count_frames(inputFileName)
 
-    inputVideo = cv2.VideoCapture(fileName)
+    inputVideo = cv2.VideoCapture(inputFileName)
     fourcc = cv2.VideoWriter_fourcc(*"XVID")
-    outputVideo = cv2.VideoWriter("output.avi", fourcc, 25, (1280, 720))
+    outputVideo = cv2.VideoWriter(outputFileName, fourcc, 25, (1280, 720))
 
     for frameId in tqdm(range(frameNumber)):
         ret, image = inputVideo.read()
