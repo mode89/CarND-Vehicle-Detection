@@ -38,6 +38,11 @@ def load_training_data_from_directory(directory, label):
     return features, labels
 
 def obtain_features(image):
+    hogFeatures = obtain_hog_features(image)
+    colorFeatures = obtain_color_features(image)
+    return np.concatenate(hogFeatures + colorFeatures)
+
+def obtain_hog_features(image):
     features = list()
     for channel in range(image.shape[2]):
         channelFeatures = hog(image[:,:,channel],
@@ -45,7 +50,10 @@ def obtain_features(image):
             pixels_per_cell=(8, 8),
             cells_per_block=(1, 1))
         features.append(channelFeatures)
-    return np.concatenate(features)
+    return features
+
+def obtain_color_features(image):
+    return [cv2.resize(image, (16, 16)).ravel()]
 
 def concatenate_training_data(trainingDataList):
     features = list()
