@@ -88,9 +88,33 @@ save the trained model into the `classifier.pkl` file.
 
 #### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
-I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
+I've implemented a multiscale sliding window search. The code for this step
+is contained in the [pipeline.py] script, the [`Pipeline.sliding_windows()`]
+method. The size of window and number of scales is controlled by the global
+variables `MIN_WINDOW_SIZE = 50`, `MAX_WINDOW_SIZE = 250` and
+`WINDOW_SCALE_STEP = 50`. Which means that we go through square windows of
+the following sizes: 50x50, 100x100, 150x150, 200x200 and 250x250. I assumed
+that a car with image smaller than 50 pixels can be considered as too far,
+and a car cannot be bigger than 250 pixels. For each of the window scales
+I scan 5 overlapped rows near the [`HORIZON_LINE = 440`][horizon_line]. I've
+noticed that the horizon line cuts a car image of any scale with the
+approximate ratio of 1:2 (one part above horizon line and two parts below
+the horizon line), which is represented by variable. Based on this fact,
+I [calculate the position of each row] of windows. Each row of windows
+overlaps an adjacent row by 4/5 of the window size. Each window in a row
+overlaps the adjacent window by 3/4 of the window size. I've started with
+the amount of overlapping equal to 1/2 of the window size. But bigger
+overlapping can produce a more contrast heat map, that's why I've started
+increasing overlapping and stopped on the selected numbers, because further
+increasing means more processing time. The `sliding_windows()` method yields
+an list of index masks, that can be applied to the original image to
+retrieve the corresponding windows.
 
-![alt text][image3]
+[pipeline.py]: ./pipeline.py
+[`Pipeline.sliding_windows()`]: https://github.com/mode89/CarND-Vehicle-Detection/blob/bac18eda030d3225e521c320ef8f2c71978456cc/pipeline.py#L19
+[horizon_line]: https://github.com/mode89/CarND-Vehicle-Detection/blob/bac18eda030d3225e521c320ef8f2c71978456cc/pipeline.py#L11
+[window_horizon_relative_shift]: https://github.com/mode89/CarND-Vehicle-Detection/blob/bac18eda030d3225e521c320ef8f2c71978456cc/pipeline.py#L12
+[calculate the position of each row]: https://github.com/mode89/CarND-Vehicle-Detection/blob/bac18eda030d3225e521c320ef8f2c71978456cc/pipeline.py#L30
 
 #### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
