@@ -39,25 +39,30 @@ You're reading it!
 
 The code for this step is contained in the [training_data.py] file. The
 [load_training_data()] method loads the vechile and non-vehicle images,
-[calculate HOG features] for each image and [associate each image with a label].
+calculate [HOG][calculate_hog_features] and [color][calculate_color_features]
+features for each image and [associate each image with a label].
 I used the `skimage.hog()` method to obtain HOG features for each channel of
 a training image. I used the default value of 9 for the number of
 orientations and the default value of `(8, 8)` for the size of a cell. After
 I settled with the classifier, I tried values of `(1, 1)` and `(3, 3)` for
 the number of cells per a block and selected the value of `(1, 1)`, because
-it provided around 20% boost in FPS and I didn't notice a big difference
+it provided slightly higher FPS and I didn't notice a big difference
 in the quality of detection compare to the value of `(3, 3)`. I merge HOG
-features calculated for each of the RGB channels of a training image.
+features calculated for each of the RGB channels of a training image. I
+[combine][combine_features] HOG features with color features. To obtain
+color features I down scale image to the size of 16x16 pixels and flatten
+the resulted image into a vector of floats.
 
 If you run the [training_data.py] script, it will extract features and
-generate labels as numpy arrays and [save][save_training_data] them into
-the `traingin_data.pkl` file. This will speed up loading of the training
-data during iterative training of the classifier.
+generate labels represented by numpy arrays and [save][save_training_data]
+them into the `traingin_data.pkl` file. This will speed up loading of
+the training data during iterative training of the classifier.
 
-[training_data.py]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/training_data.py
-[calculate HOG features]: https://github.com/mode89/CarND-Vehicle-Detection/blob/db9e99d0a7f58c9346a57f201ec4cecb29b704aa/training_data.py#L40
-[associate each image with a label]: https://github.com/mode89/CarND-Vehicle-Detection/blob/db9e99d0a7f58c9346a57f201ec4cecb29b704aa/training_data.py#L37
-[save_training_data]: https://github.com/mode89/CarND-Vehicle-Detection/blob/db9e99d0a7f58c9346a57f201ec4cecb29b704aa/training_data.py#L58
+[calculate_hog_features]: https://github.com/mode89/CarND-Vehicle-Detection/blob/f2cecc3119066e074928f17c22c0d23bc73012ec/training_data.py#L45
+[calculate_color_features]: https://github.com/mode89/CarND-Vehicle-Detection/blob/f2cecc3119066e074928f17c22c0d23bc73012ec/training_data.py#L55
+[associate each image with a label]: https://github.com/mode89/CarND-Vehicle-Detection/blob/f2cecc3119066e074928f17c22c0d23bc73012ec/training_data.py#L37
+[save_training_data]: https://github.com/mode89/CarND-Vehicle-Detection/blob/f2cecc3119066e074928f17c22c0d23bc73012ec/training_data.py#L66
+[combine_features]: https://github.com/mode89/CarND-Vehicle-Detection/blob/f2cecc3119066e074928f17c22c0d23bc73012ec/training_data.py#L43
 
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
