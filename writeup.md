@@ -149,5 +149,13 @@ Here's an example result showing the heatmap from a series of frames of video, t
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+The main issue that I faced, was the presence of the false positives. As a
+workaround I performed hard negative mining on the test image. It worked,
+but there is still a chance that the classifier will fail on the new unseen
+data. Using a bigger training dataset will make the algorithm more robust.
 
+Another issue is the computational time - the algorithm cannot perform in
+real time. Current implementation performs resizing and feature extraction
+for each of the windows separately. Those windows overlap each other, which
+means, if we could resize and extract features from the whole ROI, we can
+avoid redundant operations and improve frame rate.
