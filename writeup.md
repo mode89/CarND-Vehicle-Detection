@@ -114,10 +114,13 @@ retrieve the corresponding windows.
 
 #### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
-
-![alt text][image4]
----
+To optimize the performance of the classifier, I've tried the following
+things:
+* mix in color features with HOG features
+* using different color spaces (RGB and YUV)
+* different parameters of HOG extraction (number of orientations, number of
+  cells, number of blocks)
+* hard negative mining
 
 ### Video Implementation
 
