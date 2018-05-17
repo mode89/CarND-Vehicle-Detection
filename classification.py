@@ -30,7 +30,6 @@ class Classifier:
         print("Test score: {:.3f}".format(testScore))
 
     def predict(self, image):
-        image = cv2.resize(image, (64, 64))
         features = training_data.obtain_features(image)
         features = self.scaler.transform([features])
         return self.classifier.predict(features)

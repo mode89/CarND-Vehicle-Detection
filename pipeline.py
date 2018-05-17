@@ -40,6 +40,7 @@ class Pipeline:
         heatMap = np.zeros((720, 1280), dtype=np.uint8)
         for windowMask in Pipeline.sliding_windows():
             windowImage = image[windowMask]
+            windowImage = cv2.resize(windowImage, (64, 64))
             prediction = self.classifier.predict(windowImage)
             if prediction:
                 heatMap[windowMask] += 1
