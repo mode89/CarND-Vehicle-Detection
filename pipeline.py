@@ -23,7 +23,7 @@ class Pipeline:
             WINDOW_SCALE_STEP)
         for windowSize in windowSizes:
             columnShift = windowSize // 4
-            columnNum = (1280 - windowSize) // columnShift
+            columnNum = (1280 - windowSize) // columnShift + 1
             rowShift = windowSize // 5
             for column in range(columnNum):
                 for row in range(-2, 3):
