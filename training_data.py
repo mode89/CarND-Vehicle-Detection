@@ -38,6 +38,7 @@ def load_training_data_from_directory(directory, label):
     return features, labels
 
 def obtain_features(image):
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2YUV)
     hogFeatures = obtain_hog_features(image)
     colorFeatures = obtain_color_features(image)
     return np.concatenate(hogFeatures + colorFeatures)
