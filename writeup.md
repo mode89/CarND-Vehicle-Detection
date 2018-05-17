@@ -55,12 +55,12 @@ them into the `traingin_data.pkl` file. This will speed up loading of
 the training data during iterative training of the classifier.
 
 [training_data.py]: ./training_data.py
-[load_training_data()]: https://github.com/mode89/CarND-Vehicle-Detection/blob/f2cecc3119066e074928f17c22c0d23bc73012ec/training_data.py#L11
-[calculate_hog_features]: https://github.com/mode89/CarND-Vehicle-Detection/blob/f2cecc3119066e074928f17c22c0d23bc73012ec/training_data.py#L45
-[calculate_color_features]: https://github.com/mode89/CarND-Vehicle-Detection/blob/f2cecc3119066e074928f17c22c0d23bc73012ec/training_data.py#L55
-[associate each image with a label]: https://github.com/mode89/CarND-Vehicle-Detection/blob/f2cecc3119066e074928f17c22c0d23bc73012ec/training_data.py#L37
-[save_training_data]: https://github.com/mode89/CarND-Vehicle-Detection/blob/f2cecc3119066e074928f17c22c0d23bc73012ec/training_data.py#L66
-[combine_features]: https://github.com/mode89/CarND-Vehicle-Detection/blob/f2cecc3119066e074928f17c22c0d23bc73012ec/training_data.py#L43
+[load_training_data()]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/training_data.py#L11
+[calculate_hog_features]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/training_data.py#L46
+[calculate_color_features]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/training_data.py#L56
+[associate each image with a label]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/training_data.py#L37
+[save_training_data]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/training_data.py#L67
+[combine_features]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/training_data.py#L44
 
 #### 2. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
@@ -75,10 +75,10 @@ If you run the [classification.py] script, it will train the classifier and
 save the trained model into the `classifier.pkl` file.
 
 [classification.py]: ./classification.py
-[split training and test data]: https://github.com/mode89/CarND-Vehicle-Detection/blob/7b40beedbff7792c29c98b4d0f7d83018ea47038/classification.py#L14
-[normalize training features]: https://github.com/mode89/CarND-Vehicle-Detection/blob/7b40beedbff7792c29c98b4d0f7d83018ea47038/classification.py#L19
-[train the classifier]: https://github.com/mode89/CarND-Vehicle-Detection/blob/7b40beedbff7792c29c98b4d0f7d83018ea47038/classification.py#L24
-[save the trained model]: https://github.com/mode89/CarND-Vehicle-Detection/blob/7b40beedbff7792c29c98b4d0f7d83018ea47038/classification.py#L38
+[split training and test data]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/classification.py#L14
+[normalize training features]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/classification.py#L19
+[train the classifier]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/classification.py#L24
+[save the trained model]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/classification.py#L37
 
 ### Sliding Window Search
 
@@ -107,10 +107,9 @@ an list of index masks, that can be applied to the original image to
 retrieve the corresponding windows.
 
 [pipeline.py]: ./pipeline.py
-[`Pipeline.sliding_windows()`]: https://github.com/mode89/CarND-Vehicle-Detection/blob/bac18eda030d3225e521c320ef8f2c71978456cc/pipeline.py#L19
-[horizon_line]: https://github.com/mode89/CarND-Vehicle-Detection/blob/bac18eda030d3225e521c320ef8f2c71978456cc/pipeline.py#L11
-[window_horizon_relative_shift]: https://github.com/mode89/CarND-Vehicle-Detection/blob/bac18eda030d3225e521c320ef8f2c71978456cc/pipeline.py#L12
-[calculate the position of each row]: https://github.com/mode89/CarND-Vehicle-Detection/blob/bac18eda030d3225e521c320ef8f2c71978456cc/pipeline.py#L30
+[`Pipeline.sliding_windows()`]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L18
+[horizon_line]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L11
+[calculate the position of each row]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L29
 
 #### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
@@ -144,12 +143,12 @@ to [identify individual blobs] in the heatmap. Then [assumed] each blob
 corresponded to a vehicle. I [filtered out] those blobs that look tall.
 I [constructed bounding boxes] to cover the area of each blob left.
 
-[created a heatmap]: https://github.com/mode89/CarND-Vehicle-Detection/blob/97de7349c55edfe13d8bee8fd7688d082aaf5bca/pipeline.py#L45
-[thresholded that map]: https://github.com/mode89/CarND-Vehicle-Detection/blob/97de7349c55edfe13d8bee8fd7688d082aaf5bca/pipeline.py#L50
-[identify individual blobs]: https://github.com/mode89/CarND-Vehicle-Detection/blob/97de7349c55edfe13d8bee8fd7688d082aaf5bca/pipeline.py#L51
-[assumed]: https://github.com/mode89/CarND-Vehicle-Detection/blob/97de7349c55edfe13d8bee8fd7688d082aaf5bca/pipeline.py#L64
-[filtered out]: https://github.com/mode89/CarND-Vehicle-Detection/blob/97de7349c55edfe13d8bee8fd7688d082aaf5bca/pipeline.py#L68
-[constructed bounding boxes]: https://github.com/mode89/CarND-Vehicle-Detection/blob/97de7349c55edfe13d8bee8fd7688d082aaf5bca/pipeline.py#L53
+[created a heatmap]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L45
+[thresholded that map]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L50
+[identify individual blobs]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L51
+[assumed]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L64
+[filtered out]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L68
+[constructed bounding boxes]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L53
 
 ---
 
