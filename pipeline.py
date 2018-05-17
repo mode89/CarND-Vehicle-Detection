@@ -9,7 +9,6 @@ MIN_WINDOW_SIZE = 50
 MAX_WINDOW_SIZE = 250
 WINDOW_SCALE_STEP = 50
 HORIZON_LINE = 440
-WINDOW_HORIZON_RELATIVE_SHIFT = 0.33
 
 class Pipeline:
 
@@ -22,11 +21,11 @@ class Pipeline:
             MAX_WINDOW_SIZE + WINDOW_SCALE_STEP,
             WINDOW_SCALE_STEP)
         for windowSize in windowSizes:
-            columnShift = windowSize // 4
+            columnShift = windowSize // 3
             columnNum = (1280 - windowSize) // columnShift + 1
-            rowShift = windowSize // 5
+            rowShift = windowSize // 4
             for column in range(columnNum):
-                for row in range(-2, 3):
+                for row in range(-1, 2):
                     top = HORIZON_LINE - windowSize // 3 - row * rowShift
                     bottom = top + windowSize
                     left = column * columnShift
