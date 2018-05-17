@@ -47,7 +47,7 @@ class Pipeline:
 
     def process(self, image):
         heatMap = self.build_heat_map(image)
-        heatMap[heatMap <= 7] = 0
+        heatMap[heatMap <= 1] = 0
         labelMap, labels = label(heatMap)
 
         for labeledArea in Pipeline.find_objects(labelMap):
