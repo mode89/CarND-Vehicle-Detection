@@ -38,16 +38,16 @@ The code for this step is contained in the [training_data.py] file. The
 calculate [HOG][calculate_hog_features] and [color][calculate_color_features]
 features for each image and [associate each image with a label].
 I used the `skimage.hog()` method to obtain HOG features for each channel of
-a training image. I used the default value of 9 for the number of
-orientations and the default value of `(8, 8)` for the size of a cell. After
-I settled with the classifier, I tried values of `(1, 1)` and `(3, 3)` for
-the number of cells per a block and selected the value of `(1, 1)`, because
-it provided slightly higher FPS and I didn't notice a big difference
-in the quality of detection compare to the value of `(3, 3)`. I merge HOG
-features calculated for each of the RGB channels of a training image. I
-[combine][combine_features] HOG features with color features. To obtain
-color features I down scale image to the size of 16x16 pixels and flatten
-the resulted image into a vector of floats.
+a training image. I tried RGB and YUV color spaces, but YUV color space gave
+higher accuracy of classification. I tried different parameters of HOG
+features extraction (9 and 11), different size of a cell (8x8 and 16x16),
+different size of a block (1x1, 2x2, 3x3). I settled on 11 orientations,
+16x16 pixels per cell and 2x2 cells per block, because it gave the highest
+accuracy of classification. I merge HOG features calculated for each of
+the YUV channels of a training image. I [combine][combine_features] HOG
+features with color features. To obtain color features I down scale image
+to the size of 16x16 pixels and flatten the resulted image into a vector
+of floats.
 
 If you run the [training_data.py] script, it will extract features and
 generate labels represented by numpy arrays and [save][save_training_data]
