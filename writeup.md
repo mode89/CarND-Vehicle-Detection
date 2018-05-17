@@ -122,6 +122,13 @@ things:
   cells, number of blocks)
 * hard negative mining
 
+Here are some example images of working classifier:
+
+![test2](./output_images/test2.jpg)
+![test2](./output_images/test3.jpg)
+![test2](./output_images/test4.jpg)
+![test2](./output_images/test6.jpg)
+
 ### Video Implementation
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
