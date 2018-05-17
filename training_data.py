@@ -47,9 +47,9 @@ def obtain_hog_features(image):
     features = list()
     for channel in range(image.shape[2]):
         channelFeatures = hog(image[:,:,channel],
-            orientations=9,
-            pixels_per_cell=(8, 8),
-            cells_per_block=(1, 1))
+            orientations=11,
+            pixels_per_cell=(16, 16),
+            cells_per_block=(2, 2))
         features.append(channelFeatures)
     return features
 
