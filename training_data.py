@@ -27,7 +27,7 @@ def load_non_vehicles_training_data():
         "training_images/non-vehicles", 0)
 
 def load_training_data_from_directory(directory, label):
-    imagePaths = glob.glob(os.path.join(directory, "**/*.png"))
+    imagePaths = glob.glob(os.path.join(directory, "**/*.png"), recursive=True)
     features = list()
     labels = list()
     for path in tqdm(imagePaths):
