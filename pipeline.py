@@ -4,6 +4,7 @@ import classification
 from classification import Classifier
 from scipy.ndimage.measurements import label, find_objects
 from tqdm import tqdm
+import utils
 
 MIN_WINDOW_SIZE = 50
 MAX_WINDOW_SIZE = 250
@@ -81,33 +82,20 @@ class ObjectBoundingBox:
         self.left = obj[1].start
         self.right = obj[1].stop
 
-def count_frames(fileName):
-    print("Counting frames ...")
-    counter = 0
-    video = cv2.VideoCapture(fileName)
-    while True:
-        ret, frame = video.read()
-        if not ret: break
-        counter += 1
-    video.release()
-    return counter
-
 if __name__ == "__main__":
 
     pipeline = Pipeline()
 
     inputFileName = "project_video.mp4"
     outputFileName = "output.avi"
-    frameNumber = count_frames(inputFileName)
 
-    inputVideo = cv2.VideoCapture(inputFileName)
+    inputVideo = utils.VideoClip(inputFileName)
+
     fourcc = cv2.VideoWriter_fourcc(*"XVID")
     outputVideo = cv2.VideoWriter(outputFileName, fourcc, 25, (1280, 720))
 
-    for frameId in tqdm(range(frameNumber)):
-        ret, image = inputVideo.read()
-        image = pipeline.process(image)
+    for frame in inputVideo.frames():
+        image = pipeline.process(frame)
         outputVideo.write(image)
 
-    inputVideo.release()
     outputVideo.release()
