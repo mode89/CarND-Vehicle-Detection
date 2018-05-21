@@ -13,6 +13,7 @@ class Pipeline:
 
     def __init__(self):
         self.classifier = classification.load()
+        self.heatMap = np.zeros((720, 1280), dtype=np.float32)
 
     def sliding_windows():
         for windowSize in WINDOW_SIZES:
@@ -30,19 +31,21 @@ class Pipeline:
                         range(left, right))
                     yield windowMask
 
-    def build_heat_map(self, image):
-        heatMap = np.zeros((720, 1280), dtype=np.uint8)
+    def update_heat_map(self, image):
+        self.heatMap *= 0.9
         for windowMask in Pipeline.sliding_windows():
             windowImage = image[windowMask]
             windowImage = cv2.resize(windowImage, (64, 64))
             prediction = self.classifier.predict(windowImage)
-            if prediction:
-                heatMap[windowMask] += 1
-        return heatMap
+            if prediction > 0.1:
+                self.heatMap[windowMask] += (0.01 * prediction)
+        self.heatMap = np.clip(self.heatMap, 0.0, 1.0)
 
     def process(self, image):
-        heatMap = self.build_heat_map(image)
-        heatMap[heatMap <= 1] = 0
+        self.update_heat_map(image)
+
+        heatMap = np.uint8(self.heatMap * 255.0)
+        heatMap[heatMap < 55] = 0
         labelMap, labels = label(heatMap)
 
         for labeledArea in Pipeline.find_objects(labelMap):

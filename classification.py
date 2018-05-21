@@ -32,7 +32,8 @@ class Classifier:
     def predict(self, image):
         features = training_data.obtain_features(image)
         features = self.scaler.transform([features])
-        return self.classifier.predict(features)
+        prediction = self.classifier.predict_proba(features)
+        return prediction[0][1]
 
 def save(classifier):
     print("Saving classifier ...")
