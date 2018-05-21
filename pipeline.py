@@ -16,7 +16,7 @@ class Pipeline:
 
     def sliding_windows():
         for windowSize in WINDOW_SIZES:
-            columnShift = windowSize // 3
+            columnShift = windowSize // 4
             columnNum = (1280 - windowSize) // columnShift + 1
             rowShift = windowSize // 4
             for column in range(columnNum):
