@@ -78,7 +78,7 @@ save the trained model into the `classifier.pkl` file.
 [split training and test data]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/classification.py#L14
 [normalize training features]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/classification.py#L19
 [train the classifier]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/classification.py#L24
-[save the trained model]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/classification.py#L37
+[save the trained model]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/classification.py#L38
 
 ### Sliding Window Search
 
@@ -86,30 +86,31 @@ save the trained model into the `classifier.pkl` file.
 
 I've implemented a multiscale sliding window search. The code for this step
 is contained in the [pipeline.py] script, the [`Pipeline.sliding_windows()`]
-method. The size of window and number of scales is controlled by the global
-variables `MIN_WINDOW_SIZE = 50`, `MAX_WINDOW_SIZE = 250` and
-`WINDOW_SCALE_STEP = 50`. Which means that we go through square windows of
-the following sizes: 50x50, 100x100, 150x150, 200x200 and 250x250. I assumed
-that a car with image smaller than 50 pixels can be considered as too far,
-and a car cannot be bigger than 250 pixels. For each of the window scales
-I scan 5 overlapped rows near the [`HORIZON_LINE = 440`][horizon_line]. I've
+method.
+The size of window and number of scales is controlled by the global variable
+[`WINDOW_SIZES`][window_sizes]. I've selected several small sizes to detect
+the white car, when it's far (between 25 and 30 seconds of the project
+video). Big sizes should catch nearby cars.
+For each of the window scales
+I scan 3 overlapped rows near the [`HORIZON_LINE = 440`][horizon_line]. I've
 noticed that the horizon line cuts a car image of any scale with the
 approximate ratio of 1:2 (one part above horizon line and two parts below
 the horizon line), which is represented by variable. Based on this fact,
 I [calculate the position of each row] of windows. Each row of windows
-overlaps an adjacent row by 4/5 of the window size. Each window in a row
+overlaps an adjacent row by 3/4 of the window size. Each window in a row
 overlaps the adjacent window by 3/4 of the window size. I've started with
 the amount of overlapping equal to 1/2 of the window size. But bigger
 overlapping can produce a more contrast heat map, that's why I've started
 increasing overlapping and stopped on the selected numbers, because further
 increasing means more processing time. The `sliding_windows()` method yields
-an list of index masks, that can be applied to the original image to
+a list of index masks, that can be applied to the original image to
 retrieve the corresponding windows.
 
 [pipeline.py]: ./pipeline.py
+[window_sizes]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L9
 [`Pipeline.sliding_windows()`]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L18
-[horizon_line]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L11
-[calculate the position of each row]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L29
+[horizon_line]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L10
+[calculate the position of each row]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L25
 
 #### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
@@ -137,18 +138,21 @@ Here's a [link to my video result](./output.avi)
 #### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
 I recorded the positions of positive detections in each frame of the video.
-From the positive detections I [created a heatmap] and then [thresholded that map]
+From the positive detections I [created a heatmap]
+by [accumulating probabilities] of the positive detections inside the map over
+the time and then [thresholded that map]
 to identify vehicle positions. I then used `scipy.ndimage.measurements.label()`
 to [identify individual blobs] in the heatmap. Then [assumed] each blob
 corresponded to a vehicle. I [filtered out] those blobs that look tall.
 I [constructed bounding boxes] to cover the area of each blob left.
 
-[created a heatmap]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L45
-[thresholded that map]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L50
-[identify individual blobs]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L51
-[assumed]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L64
-[filtered out]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L68
-[constructed bounding boxes]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L53
+[created a heatmap]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L34
+[accumulating probabilities]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L41
+[thresholded that map]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L48
+[identify individual blobs]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L49
+[assumed]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L62
+[filtered out]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L66
+[constructed bounding boxes]: https://github.com/mode89/CarND-Vehicle-Detection/blob/master/pipeline.py#L51
 
 ---
 
@@ -166,3 +170,7 @@ real time. Current implementation performs resizing and feature extraction
 for each of the windows separately. Those windows overlap each other, which
 means, if we could resize and extract features from the whole ROI, we can
 avoid redundant operations and improve frame rate.
+
+Yet another issue was the detection of the distant white car. Choosing a
+smaller size of the searching window and accumulation of the heatmap over
+the time solved the problem.
