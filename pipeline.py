@@ -6,9 +6,7 @@ from scipy.ndimage.measurements import label, find_objects
 from tqdm import tqdm
 import utils
 
-MIN_WINDOW_SIZE = 50
-MAX_WINDOW_SIZE = 250
-WINDOW_SCALE_STEP = 50
+WINDOW_SIZES = [ 30, 40, 60, 90, 120, 180, 240 ]
 HORIZON_LINE = 440
 
 class Pipeline:
@@ -17,11 +15,7 @@ class Pipeline:
         self.classifier = classification.load()
 
     def sliding_windows():
-        windowSizes = range(
-            MIN_WINDOW_SIZE,
-            MAX_WINDOW_SIZE + WINDOW_SCALE_STEP,
-            WINDOW_SCALE_STEP)
-        for windowSize in windowSizes:
+        for windowSize in WINDOW_SIZES:
             columnShift = windowSize // 3
             columnNum = (1280 - windowSize) // columnShift + 1
             rowShift = windowSize // 4
