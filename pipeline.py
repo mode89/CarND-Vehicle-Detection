@@ -68,7 +68,7 @@ class Pipeline:
             boundingBox = ObjectBoundingBox(obj)
             width = boundingBox.right - boundingBox.left
             height = boundingBox.bottom - boundingBox.top
-            if width / height > 0.8:
+            if width / height > 0.5:
                 yield obj
 
 class ObjectBoundingBox:
