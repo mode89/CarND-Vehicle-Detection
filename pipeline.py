@@ -6,7 +6,7 @@ from scipy.ndimage.measurements import label, find_objects
 from tqdm import tqdm
 import utils
 
-WINDOW_SIZES = [ 30, 40, 60, 90, 120, 180, 240 ]
+WINDOW_SIZES = [ 30, 40, 60, 90, 120, 180 ]
 HORIZON_LINE = 440
 
 class Pipeline:
