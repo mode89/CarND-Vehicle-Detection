@@ -45,7 +45,7 @@ class Pipeline:
         self.update_heat_map(image)
 
         heatMap = np.uint8(self.heatMap * 255.0)
-        heatMap[heatMap < 55] = 0
+        heatMap[heatMap < 25] = 0
         labelMap, labels = label(heatMap)
 
         for labeledArea in Pipeline.find_objects(labelMap):
