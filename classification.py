@@ -21,7 +21,7 @@ class Classifier:
         testX = self.scaler.transform(testX)
 
         print("Training classifier ...")
-        self.classifier = MLPClassifier(random_state=42)
+        self.classifier = MLPClassifier((200, 50), random_state=42)
         self.classifier.fit(trainX, trainY)
 
         trainScore = self.classifier.score(trainX, trainY)
